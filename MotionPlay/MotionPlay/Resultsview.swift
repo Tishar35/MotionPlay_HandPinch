@@ -1,0 +1,146 @@
+
+import SwiftUI
+
+struct ResultsView: View {
+
+    let onDone: () -> Void
+
+    let score: Int
+    let totalFruits: Int
+    let correctFruits: Int
+
+    private var accuracy: Int {
+        guard totalFruits > 0 else { return 0 }
+        return Int(Double(correctFruits) / Double(totalFruits) * 100)
+    }
+
+    var body: some View {
+        ZStack {
+            Color(red: 0.96, green: 0.97, blue: 0.96)
+                .ignoresSafeArea()
+
+            ScrollView {
+                VStack(spacing: 26) {
+
+                    Image(systemName: "trophy.fill")
+                        .font(.system(size: 65))
+                        .foregroundStyle(.orange)
+                        .padding(.top, 25)
+
+                    VStack(spacing: 8) {
+                        Text("Amazing Work!")
+                            .font(.system(size: 32, weight: .bold))
+
+                        Text("You completed Move & Match!")
+                            .font(.system(size: 16))
+                            .foregroundStyle(.secondary)
+                    }
+
+                    // Score Card
+                    VStack(spacing: 8) {
+                        Text("YOUR FINAL SCORE")
+                            .font(.caption.bold())
+                            .tracking(2)
+                            .foregroundStyle(.secondary)
+
+                        Text("\(score)")
+                            .font(.system(size: 58, weight: .bold))
+                            .foregroundStyle(.blue)
+
+                        Text("POINTS")
+                            .font(.caption.bold())
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(30)
+                    .background(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 25))
+
+                    // Statistics
+                    HStack(spacing: 12) {
+                        statCard(
+                            title: "Accuracy",
+                            value: "\(accuracy)%",
+                            icon: "target",
+                            color: .green
+                        )
+
+                        statCard(
+                            title: "Collected",
+                            value: "\(correctFruits)",
+                            icon: "checkmark.circle.fill",
+                            color: .blue
+                        )
+                    }
+
+                    // Feedback
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Your Progress")
+                            .font(.title3.bold())
+
+                        Text("You completed your movement challenge. Keep practising and enjoy learning through movement!")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(22)
+                    .background(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 22))
+
+                    Button {
+                        onDone()
+                    } label: {
+                        Text("Done")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 17)
+                            .background(.blue)
+                            .clipShape(RoundedRectangle(cornerRadius: 17))
+                    }
+                }
+                .padding(25)
+                .frame(maxWidth: 650)
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .navigationTitle("Results")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func statCard(
+        title: String,
+        value: String,
+        icon: String,
+        color: Color
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundStyle(color)
+
+            Text(value)
+                .font(.system(size: 27, weight: .bold))
+
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(20)
+        .background(.white)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+}
+
+#Preview {
+    NavigationStack {
+        ResultsView(
+            onDone: {},
+            score: 120,
+            totalFruits: 12,
+            correctFruits: 10
+        )
+    }
+}
